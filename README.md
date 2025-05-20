@@ -21,7 +21,7 @@ Acest proiect este o implementare a popularului joc 2048 în limbajul de program
 
 2. Compilează proiectul:
     ```sh
-    gcc -o 2048_game main.c -lncurses
+    gcc -Wall -o 2048 2048.c -lSDL2 -lSDL2_ttf -lm
     ```
 
 ## Utilizare
