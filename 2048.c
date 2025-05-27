@@ -229,6 +229,7 @@ void moveTiles(int dx, int dy) {
             }
         }
     } 
+    
     else if (dx == 1) { //Dreapta
         for (int y = 0; y < gridSize; y++) {
             for (int x = gridSize - 2; x >= 0; x--) {

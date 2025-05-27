@@ -17,6 +17,7 @@ Acest proiect este o implementare a popularului joc 2048 în limbajul de program
 
 ## Instalare Biblioteci
 Pentru a instala bibliotecile necesare, poți folosi managerul de pachete specific sistemului tău de operare.
+
 ### Linux (Debian/Ubuntu)
 ```sh
 sudo apt-get install libsdl2-dev libsdl2-ttf-dev
