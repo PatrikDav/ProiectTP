@@ -42,7 +42,7 @@ SDL_Renderer *renderer = NULL;
 TTF_Font *font = NULL;
 TTF_Font *bigFont = NULL;
 
-// Color palette for tiles
+
 SDL_Color bgColor = {187, 173, 160, 255};
 SDL_Color textColor = {119, 110, 101, 255};
 SDL_Color textColorLight = {249, 246, 242, 255};
@@ -114,7 +114,7 @@ void freeGame() {
             }
         }
         free(grid);
-        grid = NULL;  // Important to set to NULL after freeing
+        grid = NULL;
     }
 }
 
@@ -133,7 +133,6 @@ void spawnTile() {
     }
 
     if (emptyCount > 0) {
-        // Spawn more initial tiles for larger grids
         int tilesToSpawn = (gridSize == 4) ? 2 : (gridSize == 5) ? 3 : 4;
         tilesToSpawn = (tilesToSpawn > emptyCount) ? emptyCount : tilesToSpawn;
         
@@ -144,7 +143,6 @@ void spawnTile() {
             grid[y][x].value = (rand() % 10 < 9) ? 2 : 4;
             grid[y][x].newTile = true;
             
-            // Remove this position from empty cells
             emptyCells[index][0] = emptyCells[emptyCount-1][0];
             emptyCells[index][1] = emptyCells[emptyCount-1][1];
             emptyCount--;
@@ -153,15 +151,12 @@ void spawnTile() {
 }
 
 void initGame() {
-    // Free previous grid if it exists
     freeGame();
     
-    // Reset game state
     score = 0;
     gameOver = false;
     moved = false;
 
-    // Allocate new grid
     grid = (Tile **)malloc(gridSize * sizeof(Tile *));
     for (int i = 0; i < gridSize; i++) {
         grid[i] = (Tile *)malloc(gridSize * sizeof(Tile));
@@ -179,7 +174,6 @@ void initGame() {
 }
 
 bool isGameOver() {
-    // Check for empty spaces
     for (int y = 0; y < gridSize; y++) {
         for (int x = 0; x < gridSize; x++) {
             if (grid[y][x].value == 0) {
@@ -188,7 +182,6 @@ bool isGameOver() {
         }
     }
 
-    // Check for possible merges
     for (int y = 0; y < gridSize; y++) {
         for (int x = 0; x < gridSize; x++) {
             int value = grid[y][x].value;
@@ -205,7 +198,6 @@ bool isGameOver() {
 void moveTiles(int dx, int dy) {
     moved = false;
     
-    // Reset merge flags
     for (int y = 0; y < gridSize; y++) {
         for (int x = 0; x < gridSize; x++) {
             grid[y][x].merged = false;
@@ -213,7 +205,7 @@ void moveTiles(int dx, int dy) {
         }
     }
 
-    if (dx == -1) { // Left
+    if (dx == -1) { //Stanga
         for (int y = 0; y < gridSize; y++) {
             for (int x = 1; x < gridSize; x++) {
                 if (grid[y][x].value != 0) {
@@ -223,14 +215,12 @@ void moveTiles(int dx, int dy) {
                     }
                     
                     if (newX > 0 && grid[y][newX - 1].value == grid[y][x].value && !grid[y][newX - 1].merged) {
-                        // Merge tiles
                         grid[y][newX - 1].value *= 2;
                         score += grid[y][newX - 1].value;
                         grid[y][x].value = 0;
                         grid[y][newX - 1].merged = true;
                         moved = true;
                     } else if (newX != x) {
-                        // Move tile
                         grid[y][newX].value = grid[y][x].value;
                         grid[y][x].value = 0;
                         moved = true;
@@ -239,7 +229,7 @@ void moveTiles(int dx, int dy) {
             }
         }
     } 
-    else if (dx == 1) { // Right
+    else if (dx == 1) { //Dreapta
         for (int y = 0; y < gridSize; y++) {
             for (int x = gridSize - 2; x >= 0; x--) {
                 if (grid[y][x].value != 0) {
@@ -249,14 +239,12 @@ void moveTiles(int dx, int dy) {
                     }
                     
                     if (newX < gridSize - 1 && grid[y][newX + 1].value == grid[y][x].value && !grid[y][newX + 1].merged) {
-                        // Merge tiles
                         grid[y][newX + 1].value *= 2;
                         score += grid[y][newX + 1].value;
                         grid[y][x].value = 0;
                         grid[y][newX + 1].merged = true;
                         moved = true;
                     } else if (newX != x) {
-                        // Move tile
                         grid[y][newX].value = grid[y][x].value;
                         grid[y][x].value = 0;
                         moved = true;
@@ -265,7 +253,7 @@ void moveTiles(int dx, int dy) {
             }
         }
     } 
-    else if (dy == -1) { // Up
+    else if (dy == -1) { //SUS
         for (int x = 0; x < gridSize; x++) {
             for (int y = 1; y < gridSize; y++) {
                 if (grid[y][x].value != 0) {
@@ -275,14 +263,12 @@ void moveTiles(int dx, int dy) {
                     }
                     
                     if (newY > 0 && grid[newY - 1][x].value == grid[y][x].value && !grid[newY - 1][x].merged) {
-                        // Merge tiles
                         grid[newY - 1][x].value *= 2;
                         score += grid[newY - 1][x].value;
                         grid[y][x].value = 0;
                         grid[newY - 1][x].merged = true;
                         moved = true;
                     } else if (newY != y) {
-                        // Move tile
                         grid[newY][x].value = grid[y][x].value;
                         grid[y][x].value = 0;
                         moved = true;
@@ -291,7 +277,7 @@ void moveTiles(int dx, int dy) {
             }
         }
     } 
-    else if (dy == 1) { // Down
+    else if (dy == 1) { // JOS
         for (int x = 0; x < gridSize; x++) {
             for (int y = gridSize - 2; y >= 0; y--) {
                 if (grid[y][x].value != 0) {
@@ -301,14 +287,12 @@ void moveTiles(int dx, int dy) {
                     }
                     
                     if (newY < gridSize - 1 && grid[newY + 1][x].value == grid[y][x].value && !grid[newY + 1][x].merged) {
-                        // Merge tiles
                         grid[newY + 1][x].value *= 2;
                         score += grid[newY + 1][x].value;
                         grid[y][x].value = 0;
                         grid[newY + 1][x].merged = true;
                         moved = true;
                     } else if (newY != y) {
-                        // Move tile
                         grid[newY][x].value = grid[y][x].value;
                         grid[y][x].value = 0;
                         moved = true;
@@ -327,7 +311,6 @@ void moveTiles(int dx, int dy) {
 void drawRoundedRect(int x, int y, int w, int h, int radius, SDL_Color color) {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     
-    // Draw filled rectangles for the main body and corners
     SDL_Rect rects[] = {
         {x + radius, y, w - 2 * radius, h},
         {x, y + radius, radius, h - 2 * radius},
@@ -335,13 +318,11 @@ void drawRoundedRect(int x, int y, int w, int h, int radius, SDL_Color color) {
     };
     SDL_RenderFillRects(renderer, rects, 3);
     
-    // Draw circles for the rounded corners
     for (int i = 0; i < 360; i++) {
         float angle = i * M_PI / 180.0f;
         int dx = radius * cosf(angle);
         int dy = radius * sinf(angle);
         
-        // Top-left corner
         SDL_RenderDrawPoint(renderer, x + radius + dx, y + radius + dy);
         // Top-right corner
         SDL_RenderDrawPoint(renderer, x + w - radius + dx, y + radius + dy);
